@@ -39,7 +39,6 @@ let schema = {
   format: 'idn-email'
 };
 ajv.validate(schema, 'квіточка@пошта.укр')  // returns true
-
 ```
 
 ## Formats
