@@ -1,4 +1,4 @@
-# ajv-draft2019-formats
+# ajv-formats
 Plugin for AJV that adds support for **some** of draft2019 formats.
 
 Currently, the `iri`, `idn-email`, and `duration` formats are supported.
@@ -6,7 +6,7 @@ Currently, the `iri`, `idn-email`, and `duration` formats are supported.
 ## Installation
 
 ```
-npm install ajv-draft2019-formats
+npm install ajv-formats
 ```
 
 ## Usage
@@ -15,7 +15,7 @@ The main export is an `apply` function that patches an existing instance of `ajv
 
 ```
 const Ajv = require('ajv');
-const apply = require('ajv-draft2019-formats');
+const apply = require('ajv-formats');
 const ajv = new Ajv();
 apply(ajv);
 
