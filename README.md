@@ -11,9 +11,12 @@ npm install ajv-draft2019-formats
 
 ## Usage
 
+The main export is an `apply` function that patches an existing instance of `ajv`.
+
 ```
-const ajv = require('ajv');
+const Ajv = require('ajv');
 const apply = require('ajv-draft2019-formats');
+const ajv = new Ajv();
 apply(ajv);
 
 let schema = {
@@ -23,14 +26,28 @@ let schema = {
 ajv.validate(schema, 'квіточка@пошта.укр')  // returns true
 ```
 
-See `index.test.js` for more usage examples.
+Alternately, the formats can be passed as an option when creating a new `ajv` instance.
+
+```
+const Ajv = require('ajv');
+const apply = require('ajv-draft2019-formats/formats');
+const ajv = new Ajv();
+apply(ajv);
+
+let schema = {
+  type: 'string',
+  format: 'idn-email'
+};
+ajv.validate(schema, 'квіточка@пошта.укр')  // returns true
+
+```
 
 ## Formats
 
 ### iri
 
 Scheme are checked against the list of IANA schemes for a valid scheme and path only.
-For 'mailto' schemes, all of the `to:` addresses are validated as well.
+For 'mailto' schemes, all of the `to:` addresses are validated.
 
 ### idn-email
 

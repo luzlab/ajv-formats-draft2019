@@ -1,7 +1,8 @@
 const formats = require("./formats");
 
+// console.dir(Object.keys(formats));
 module.exports = ajv => {
-  formats.forEach(format => {
-    ajv.addFormat(format.name, format.validate);
+  Object.keys(formats).forEach(key => {
+    ajv.addFormat(key, formats[key]);
   });
 };
