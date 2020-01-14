@@ -30,9 +30,8 @@ Alternately, the formats can be passed as an option when creating a new `ajv` in
 
 ```
 const Ajv = require('ajv');
-const apply = require('ajv-draft2019-formats/formats');
-const ajv = new Ajv();
-apply(ajv);
+const formats = require('ajv-draft2019-formats/formats');
+const ajv = new Ajv({formats});
 
 let schema = {
   type: 'string',
