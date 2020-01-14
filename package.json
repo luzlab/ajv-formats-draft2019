@@ -1,0 +1,25 @@
+{
+  "name": "ajv-draft2019-formats",
+  "version": "1.0.0",
+  "description": "Plugin for AJV that adds support for some of draft2019 formats.",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "test": "mocha index.test.js"
+  },
+  "author": "Carlo Quinonez <carlo@machina.bio>",
+  "license": "MIT",
+  "repository": "https://github.com/luzlab/ajv-draft2019-formats.git",
+  "dependencies": {
+    "isemail": "^3.2.0",
+    "schemes": "^1.1.1",
+    "uri-js": "^4.2.2"
+  },
+  "peerDependencies": {
+    "ajv": "*"
+  },
+  "devDependencies": {
+    "ajv": "^6.10.2",
+    "mocha": "^4.0.1"
+  }
+}
