@@ -1,7 +1,9 @@
 # ajv-formats
-Plugin for AJV that adds support for **some** of draft2019 formats.
+Plugin for AJV that adds support for additional international formats and formats
+added in draft2019.
 
-Currently, the `iri`, `idn-email`, and `duration` formats are supported.
+Currently, `iri`, `iri-reference`, `idn-email`, `idn-hostname`, and `duration` formats
+(added in draft 2019) are supported.
 
 ## Installation
 
@@ -30,7 +32,7 @@ Alternately, the formats can be passed as an option when creating a new `ajv` in
 
 ```
 const Ajv = require('ajv');
-const formats = require('ajv-draft2019-formats/formats');
+const formats = require('ajv-formats/formats');
 const ajv = new Ajv({formats});
 
 let schema = {
@@ -40,16 +42,37 @@ let schema = {
 ajv.validate(schema, 'квіточка@пошта.укр')  // returns true
 ```
 
+## Draft07
+
+The library also provides a `draft07` export to load only the formats relevant to
+draft07.
+
+```
+const Ajv = require('ajv');
+const formats = require('ajv-formats/draft07');
+const ajv = new Ajv({formats});
+```
+
 ## Formats
 
 ### iri
 
-Scheme are checked against the list of IANA schemes for a valid scheme and path only.
-For 'mailto' schemes, all of the `to:` addresses are validated.
+The string is parsed with 'uri-js' and the scheme is checked against the list of known IANA schemes.
+If it's a 'mailto' schemes, all of the `to:` addresses are validated, otherwise we check there IRI 
+includes a path and is an absolute reference.
+
+### iri-reference
+
+All valid IRIs are valid. Fragments must have a valid path and of type "relative", "same-document"
+or "uri". If there is a scheme, it must be valid.
 
 ### idn-email
 
 [`isemail`](https://www.npmjs.com/package/isemail) is used to check the validity of the email.
+
+### idn-hostname
+
+The hostname is converted to ascii with punycode and checked for a valid tld.
 
 ### duration
 

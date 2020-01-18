@@ -1,14 +1,15 @@
-const { parse } = require('uri-js');
-const { validate } = require('isemail');
-const schemes = require('schemes');
+const { parse } = require("uri-js");
+const { validate } = require("isemail");
+const schemes = require("schemes");
 
-module.exports.name = 'iri'
-module.exports.validate = (value) => {
-  const uri = parse(value);
-  if (uri.scheme === 'mailto' && uri.to.every(validate)) {
+module.exports.name = "iri";
+module.exports.validate = value => {
+  const iri = parse(value);
+  if (iri.scheme === "mailto" && iri.to.every(validate)) {
     return true;
-  };  if (schemes.allByName[uri.scheme] && uri.reference === 'absolute') {
+  }
+  if (iri.reference === "absolute" && schemes.allByName[iri.scheme]) {
     return true;
   }
   return false;
-}
+};
