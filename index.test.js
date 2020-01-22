@@ -1,6 +1,5 @@
 const assert = require('assert');
 const apply = require('./index.js');
-const formats = require('./formats');
 const Ajv = require('ajv');
 
 describe('load types', function() {
@@ -15,6 +14,7 @@ describe('load types', function() {
   });
 
   it('add the types to ajv as options to Ajv instances', function() {
+    const formats = require('./formats');
     const ajv = new Ajv({ formats });
     assert.ok(ajv._formats.duration);
     assert.ok(ajv._formats.iri);
@@ -177,6 +177,7 @@ describe('load types', function() {
 
     // bad tld
     assert.ok(!validate('example.unknown'));
+    assert.ok(!validate('localhost'));
 
     // a URL, not a hostname
     assert.ok(!validate('http://google.com'));
@@ -260,5 +261,17 @@ describe('load types', function() {
     assert.ok(ajv._formats['idn-email']);
     assert.ok(ajv._formats['idn-hostname']);
     assert.ok(ajv._formats['iri-reference']);
+  });
+
+  it('it should be possible to cherry pick formats to install', function() {
+    const { duration, iri } = require('./formats');
+
+    const ajv = new Ajv({ formats: { duration, iri } });
+
+    assert.ok(ajv._formats.duration);
+    assert.ok(ajv._formats.iri);
+    assert.ok(!ajv._formats['idn-email']);
+    assert.ok(!ajv._formats['idn-hostname']);
+    assert.ok(!ajv._formats['iri-reference']);
   });
 });

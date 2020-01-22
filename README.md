@@ -1,21 +1,44 @@
 # ajv-formats
-Plugin for AJV that adds support for additional international formats and formats
-added in draft2019.
 
-Currently, `iri`, `iri-reference`, `idn-email`, `idn-hostname`, and `duration` formats
-(added in draft 2019) are supported.
+Plugin for AJV that adds support for additional international formats and
+formats added in draft2019.
+
+Currently, `iri`, `iri-reference`, `idn-email`, `idn-hostname`, and `duration`
+formats are supported. `duration` was added in draft 2019.
+
+An open question is how thoroughly to validate things like hostnames and IRIs
+where the syntax and semantics diverge. Writing a regex for a hostname the
+syntax (ie. only contains certain characters, there are multiple segments
+separated by `.` and the lengths of all segments and the total length). But that
+won't catch obviously fake domains like `unknown.unknown`. This library goes a
+step further than just checking the syntax and also attempts to check the
+semantics as well. For example, when validating `idn-hostname`, this library
+will also check for a valid TLD.
+
+Validating a IRI references is challenging since the syntax is so permissive.
+Basically, any URL-safe string is a valid IRI syntactically. I struggled to find
+[negative test cases](https://github.com/luzlab/ajv-formats/blob/master/index.test.js#L232)
+when writing the unit tests for IRI-references. Consider:
+
+- `google.com` is NOT a valid IRI because it does not include a scheme.
+- `file.txt` is a valid IRI-reference
+- `/this:that` is a valid IRI-reference
+- `this:that` is a NOT a valid IRI-reference
+
+Regardless, the library is a solid first-pass at implementing the
 
 ## Installation
 
-```
+```sh
 npm install ajv-formats
 ```
 
 ## Usage
 
-The main export is an `apply` function that patches an existing instance of `ajv`.
+The default export is an `apply` function that patches an existing instance of
+`ajv`.
 
-```
+```js
 const Ajv = require('ajv');
 const apply = require('ajv-formats');
 const ajv = new Ajv();
@@ -23,56 +46,70 @@ apply(ajv);
 
 let schema = {
   type: 'string',
-  format: 'idn-email'
+  format: 'idn-email',
 };
-ajv.validate(schema, 'квіточка@пошта.укр')  // returns true
+ajv.validate(schema, 'квіточка@пошта.укр'); // returns true
 ```
 
-Alternately, the formats can be passed as an option when creating a new `ajv` instance.
+The module also provides an alternate entrypoint `ajv-formats/formats` that
+works with the `ajv` constructor to add the formats to new instances.
 
-```
+```js
 const Ajv = require('ajv');
 const formats = require('ajv-formats/formats');
-const ajv = new Ajv({formats});
+const ajv = new Ajv({ formats });
 
 let schema = {
   type: 'string',
-  format: 'idn-email'
+  format: 'idn-email',
 };
-ajv.validate(schema, 'квіточка@пошта.укр')  // returns true
+ajv.validate(schema, 'квіточка@пошта.укр'); // returns true
 ```
 
-## Draft07
+Using the `ajv-formats/formats` entry point also allows cherry picking formats.
+Note the approach below only works for formats that don't contain a hypen `-` in
+the name.
 
-The library also provides a `draft07` export to load only the formats relevant to
-draft07.
-
-```
+```js
 const Ajv = require('ajv');
-const formats = require('ajv-formats/draft07');
-const ajv = new Ajv({formats});
+const { duration, iri } = require('ajv-formats/formats');
+const ajv = new Ajv({ formats: { duration, iri } });
+```
+
+## International formats
+
+The library also provides an `idn` export to load only the international formats
+(ie. `iri`, `iri-reference`, `idn-hostname` and `idn-email`).
+
+```js
+const Ajv = require('ajv');
+const formats = require('ajv-formats/idn');
+const ajv = new Ajv({ formats });
 ```
 
 ## Formats
 
 ### iri
 
-The string is parsed with 'uri-js' and the scheme is checked against the list of known IANA schemes.
-If it's a 'mailto' schemes, all of the `to:` addresses are validated, otherwise we check there IRI 
-includes a path and is an absolute reference.
+The string is parsed with 'uri-js' and the scheme is checked against the list of
+known IANA schemes. If it's a 'mailto' schemes, all of the `to:` addresses are
+validated, otherwise we check there IRI includes a path and is an absolute
+reference.
 
 ### iri-reference
 
-All valid IRIs are valid. Fragments must have a valid path and of type "relative", "same-document"
-or "uri". If there is a scheme, it must be valid.
+All valid IRIs are valid. Fragments must have a valid path and of type
+"relative", "same-document" or "uri". If there is a scheme, it must be valid.
 
 ### idn-email
 
-[`isemail`](https://www.npmjs.com/package/isemail) is used to check the validity of the email.
+[`isemail`](https://www.npmjs.com/package/isemail) is used to check the validity
+of the email.
 
 ### idn-hostname
 
 The hostname is converted to ascii with punycode and checked for a valid tld.
+Note that `localhost` is technically not a valid hostname.
 
 ### duration
 
