@@ -7,25 +7,13 @@ Currently, `iri`, `iri-reference`, `idn-email`, `idn-hostname`, and `duration`
 formats are supported. `duration` was added in draft 2019.
 
 An open question is how thoroughly to validate things like hostnames and IRIs
-where the syntax and semantics diverge. Writing a regex for a hostname the
-syntax (ie. only contains certain characters, there are multiple segments
-separated by `.` and the lengths of all segments and the total length). But that
+where the syntax and semantics diverge. Writing a regex for hostnames checks the
+syntax (ie. contains only certain characters, there are multiple segments
+separated by `.` and the lengths of all segments and the total length). That
 won't catch obviously fake domains like `unknown.unknown`. This library goes a
 step further than just checking the syntax and also attempts to check the
 semantics as well. For example, when validating `idn-hostname`, this library
 will also check for a valid TLD.
-
-Validating a IRI references is challenging since the syntax is so permissive.
-Basically, any URL-safe string is a valid IRI syntactically. I struggled to find
-[negative test cases](https://github.com/luzlab/ajv-formats/blob/master/index.test.js#L232)
-when writing the unit tests for IRI-references. Consider:
-
-- `google.com` is NOT a valid IRI because it does not include a scheme.
-- `file.txt` is a valid IRI-reference
-- `/this:that` is a valid IRI-reference
-- `this:that` is a NOT a valid IRI-reference
-
-Regardless, the library is a solid first-pass at implementing the
 
 ## Installation
 
@@ -100,6 +88,16 @@ reference.
 
 All valid IRIs are valid. Fragments must have a valid path and of type
 "relative", "same-document" or "uri". If there is a scheme, it must be valid.
+
+Validating a IRI references is challenging since the syntax is so permissive.
+Basically, any URL-safe string is a valid IRI syntactically. I struggled to find
+[negative test cases](https://github.com/luzlab/ajv-formats/blob/master/index.test.js#L232)
+when writing the unit tests for IRI-references. Consider:
+
+- `google.com` is NOT a valid IRI because it does not include a scheme.
+- `file.txt` is a valid IRI-reference
+- `/this:that` is a valid IRI-reference
+- `this:that` is a NOT a valid IRI-reference
 
 ### idn-email
 
