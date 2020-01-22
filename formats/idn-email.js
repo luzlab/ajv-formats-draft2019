@@ -1,6 +1,5 @@
 const { validate } = require('isemail');
 
-module.exports.name = 'idn-email'
-module.exports.validate = (value) => {
+module.exports = value => {
   return validate(value);
-}
+};

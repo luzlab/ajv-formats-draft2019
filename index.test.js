@@ -1,259 +1,264 @@
-const assert = require("assert");
-const apply = require("./index.js");
-const formats = require("./formats");
-const Ajv = require("ajv");
+const assert = require('assert');
+const apply = require('./index.js');
+const formats = require('./formats');
+const Ajv = require('ajv');
 
-describe("load types", function() {
-  it("add the types to ajv with the apply function", function() {
+describe('load types', function() {
+  it('add the types to ajv with the apply function', function() {
     const ajv = new Ajv();
     apply(ajv);
     assert.ok(ajv._formats.duration);
     assert.ok(ajv._formats.iri);
-    assert.ok(ajv._formats["idn-email"]);
-    assert.ok(ajv._formats["idn-hostname"]);
-    assert.ok(ajv._formats["iri-reference"]);
+    assert.ok(ajv._formats['idn-email']);
+    assert.ok(ajv._formats['idn-hostname']);
+    assert.ok(ajv._formats['iri-reference']);
   });
 
-  it("add the types to ajv as options to Ajv instances", function () {
+  it('add the types to ajv as options to Ajv instances', function() {
     const ajv = new Ajv({ formats });
     assert.ok(ajv._formats.duration);
     assert.ok(ajv._formats.iri);
-    assert.ok(ajv._formats["idn-email"]);
-    assert.ok(ajv._formats["idn-hostname"]);
-    assert.ok(ajv._formats["iri-reference"]);
+    assert.ok(ajv._formats['idn-email']);
+    assert.ok(ajv._formats['idn-hostname']);
+    assert.ok(ajv._formats['iri-reference']);
   });
 
-  it("accept valid IRIs", function() {
+  it('accept valid IRIs', function() {
     const ajv = new Ajv();
     apply(ajv);
     const schema = {
-      type: "string",
-      format: "iri"
+      type: 'string',
+      format: 'iri',
     };
     const validate = ajv.compile(schema);
 
     // examples from https://tools.ietf.org/html/rfc2396#section-1.3
-    assert.ok(validate("http://www.ietf.org/rfc/rfc2396.txt"));
-    assert.ok(validate("https://пошта.укр/russian"));
-    assert.ok(validate("ldap://[2001:db8::7]/c=GB?objectClass?one"));
-    assert.ok(validate("mailto:John.Doe@example.com"));
-    assert.ok(validate("news:comp.infosystems.www.servers.unix"));
-    assert.ok(validate("tel:+1-816-555-1212"));
-    assert.ok(validate("telnet://192.0.2.16:80/"));
-    assert.ok(validate("urn:oasis:names:specification:docbook:dtd:xml:4.1.2"));
+    assert.ok(validate('http://www.ietf.org/rfc/rfc2396.txt'));
+    assert.ok(validate('https://пошта.укр/russian'));
+    assert.ok(validate('ldap://[2001:db8::7]/c=GB?objectClass?one'));
+    assert.ok(validate('mailto:John.Doe@example.com'));
+    assert.ok(validate('news:comp.infosystems.www.servers.unix'));
+    assert.ok(validate('tel:+1-816-555-1212'));
+    assert.ok(validate('telnet://192.0.2.16:80/'));
+    assert.ok(validate('urn:oasis:names:specification:docbook:dtd:xml:4.1.2'));
   });
 
-  it("reject invalid IRIs", function() {
+  it('reject invalid IRIs', function() {
     const ajv = new Ajv();
     apply(ajv);
 
     const schema = {
-      type: "string",
-      format: "iri"
+      type: 'string',
+      format: 'iri',
     };
     var validate = ajv.compile(schema);
-    assert.ok(!validate("example.com")); // missing a scheme
-    assert.ok(!validate("invalidScheme://example.com")); // an invalid scheme
-    assert.ok(!validate("this:that"));
+    assert.ok(!validate('example.com')); // missing a scheme
+    assert.ok(!validate('invalidScheme://example.com')); // an invalid scheme
+    assert.ok(!validate('this:that'));
 
     // These are IRI-References not IRI
-    assert.ok(!validate("#someelement"));
-    assert.ok(!validate("afile.svg#anelement"));
+    assert.ok(!validate('#someelement'));
+    assert.ok(!validate('afile.svg#anelement'));
   });
 
-  it("accept a valid duration", function() {
+  it('accept a valid duration', function() {
     const ajv = new Ajv();
     apply(ajv);
 
     const schema = {
-      type: "string",
-      format: "duration"
+      type: 'string',
+      format: 'duration',
     };
     var validate = ajv.compile(schema);
-    assert.ok(validate("P1Y2M4DT20H44M12.67S"));
+    assert.ok(validate('P1Y2M4DT20H44M12.67S'));
   });
 
-  it("reject an invalid duration", function() {
+  it('reject an invalid duration', function() {
     const ajv = new Ajv();
     apply(ajv);
 
     const schema = {
-      type: "string",
-      format: "duration"
+      type: 'string',
+      format: 'duration',
     };
     var validate = ajv.compile(schema);
-    assert.ok(!validate("10 seconds"));
+    assert.ok(!validate('10 seconds'));
   });
 
-  it("accept valid idn-emails", function() {
+  it('accept valid idn-emails', function() {
     const ajv = new Ajv();
     apply(ajv);
 
     const schema = {
-      type: "string",
-      format: "idn-email"
+      type: 'string',
+      format: 'idn-email',
     };
     const validate = ajv.compile(schema);
 
     // examples from https://en.wikipedia.org/wiki/International_email
-    assert.ok(validate("квіточка@пошта.укр"));
-    assert.ok(validate("Dörte@Sörensen.example.com"));
-    assert.ok(validate("John.Doe@example.com"));
+    assert.ok(validate('квіточка@пошта.укр'));
+    assert.ok(validate('Dörte@Sörensen.example.com'));
+    assert.ok(validate('John.Doe@example.com'));
   });
 
-  it("reject invalid idn-emails", function() {
+  it('reject invalid idn-emails', function() {
     const ajv = new Ajv();
     apply(ajv);
 
     const schema = {
-      type: "string",
-      format: "idn-email"
+      type: 'string',
+      format: 'idn-email',
     };
     var validate = ajv.compile(schema);
-    assert.ok(!validate("johndoe"));
-    assert.ok(!validate("valid@somewhere.com?asdf"));
+    assert.ok(!validate('johndoe'));
+    assert.ok(!validate('valid@somewhere.com?asdf'));
   });
 
-  it("accept valid uuids", function() {
+  it('accept valid uuids', function() {
     const ajv = new Ajv();
     apply(ajv);
 
     const schema = {
-      type: "string",
-      format: "uuid"
+      type: 'string',
+      format: 'uuid',
     };
     const validate = ajv.compile(schema);
 
     // examples from https://www.uuidgenerator.net/version4
-    assert.ok(validate("90e89155-4c0d-4942-a804-a610ccb76b1b"));
-    assert.ok(validate("55e9b1aa-cff4-43fe-8c66-bdd190720360"));
+    assert.ok(validate('90e89155-4c0d-4942-a804-a610ccb76b1b'));
+    assert.ok(validate('55e9b1aa-cff4-43fe-8c66-bdd190720360'));
 
     // examples from https://www.uuidgenerator.net/version1
-    assert.ok(validate("e1a4973e-395b-11ea-a137-2e728ce88125"));
-
+    assert.ok(validate('e1a4973e-395b-11ea-a137-2e728ce88125'));
   });
 
-  it("reject invalid uuids", function() {
+  it('reject invalid uuids', function() {
     const ajv = new Ajv();
     apply(ajv);
 
     const schema = {
-      type: "string",
-      format: "uuid"
+      type: 'string',
+      format: 'uuid',
     };
     var validate = ajv.compile(schema);
-    assert.ok(!validate("90e89155-4c0d-4942-a804-a610ccb76b1b1"));
-    assert.ok(!validate("55e9b1aa-cff4-43fe-8c66-bdg190720360"));
+    assert.ok(!validate('90e89155-4c0d-4942-a804-a610ccb76b1b1'));
+    assert.ok(!validate('55e9b1aa-cff4-43fe-8c66-bdg190720360'));
   });
 
-  it("accept valid international domains", function() {
+  it('accept valid international domains', function() {
     const ajv = new Ajv();
     apply(ajv);
 
     const schema = {
-      type: "string",
-      format: "idn-hostname"
+      type: 'string',
+      format: 'idn-hostname',
     };
     const validate = ajv.compile(schema);
 
-    assert.ok(validate("google.com"));
+    assert.ok(validate('google.com'));
 
     // example from https://en.wikipedia.org/wiki/Internationalized_domain_name#Example_of_IDNA_encoding
-    assert.ok(validate("ジェーピーニック.jp"));
-    assert.ok(validate("ουτοπία.δπθ.gr"));
+    assert.ok(validate('ジェーピーニック.jp'));
+    assert.ok(validate('ουτοπία.δπθ.gr'));
 
     // example from https://unicode.org/faq/idn.html#11
-    assert.ok(validate("öbb.at"));
+    assert.ok(validate('öbb.at'));
   });
 
-  it("reject invalid international domains", function() {
+  it('reject invalid international domains', function() {
     const ajv = new Ajv();
     apply(ajv);
 
     const schema = {
-      type: "string",
-      format: "idn-hostname"
+      type: 'string',
+      format: 'idn-hostname',
     };
     var validate = ajv.compile(schema);
 
     // bad tld
-    assert.ok(!validate("example.unknown"));
+    assert.ok(!validate('example.unknown'));
 
     // a URL, not a hostname
-    assert.ok(!validate("http://google.com"));
+    assert.ok(!validate('http://google.com'));
   });
 
-  it("accept valid IRI-reference", function() {
+  it('accept valid IRI-reference', function() {
     const ajv = new Ajv();
     apply(ajv);
 
     const schema = {
-      type: "string",
-      format: "iri-reference"
+      type: 'string',
+      format: 'iri-reference',
     };
     const validate = ajv.compile(schema);
 
     assert.ok(validate('https://tools.ietf.org/html/rfc3986#section-4.2'));
 
     // examples from https://dev.w3.org/SVG/profiles/1.2T/publish/diff/linking.html#IRIforms
-    assert.ok(validate("#someelement"));
-    assert.ok(validate("afile.svg#anelement"));
-    assert.ok(validate("afile.svg"));
-    assert.ok(validate("somecontainer#fragment"));
+    assert.ok(validate('#someelement'));
+    assert.ok(validate('afile.svg#anelement'));
+    assert.ok(validate('afile.svg'));
+    assert.ok(validate('somecontainer#fragment'));
 
     // from http://homepage.divms.uiowa.edu/~rus/Courses/WebPro/uri.pdf
-    assert.ok(validate("http://example.org/absolute/URI/with/absolute/path/to/resource.txt"));
-    assert.ok(validate("//example.org/scheme-relative/URI/with/absolute/path/to/resource.txt"));
-    assert.ok(validate("/relative/URI/with/absolute/path/to/resource.txt"));
-    assert.ok(validate("relative/path/to/resource.txt"));
-    assert.ok(validate("../../../resource.txt"));
-    assert.ok(validate("./resource.txt#frag01"));
-    assert.ok(validate("resource.txt"));
-    assert.ok(validate("#frag01"));
+    assert.ok(
+      validate(
+        'http://example.org/absolute/URI/with/absolute/path/to/resource.txt',
+      ),
+    );
+    assert.ok(
+      validate(
+        '//example.org/scheme-relative/URI/with/absolute/path/to/resource.txt',
+      ),
+    );
+    assert.ok(validate('/relative/URI/with/absolute/path/to/resource.txt'));
+    assert.ok(validate('relative/path/to/resource.txt'));
+    assert.ok(validate('../../../resource.txt'));
+    assert.ok(validate('./resource.txt#frag01'));
+    assert.ok(validate('resource.txt'));
+    assert.ok(validate('#frag01'));
 
     // https://tools.ietf.org/html/rfc3986#section-4.2
-    assert.ok(validate("//network/test"));
-    assert.ok(validate("./this:that"));
-    assert.ok(validate("./path")); // relative-path reference
-    assert.ok(validate("/path")); // absolute-path reference
+    assert.ok(validate('//network/test'));
+    assert.ok(validate('./this:that'));
+    assert.ok(validate('./path')); // relative-path reference
+    assert.ok(validate('/path')); // absolute-path reference
   });
 
-  it("reject invalid IRI-reference", function() {
+  it('reject invalid IRI-reference', function() {
     const ajv = new Ajv();
     apply(ajv);
 
     const schema = {
-      type: "string",
-      format: "iri-reference"
+      type: 'string',
+      format: 'iri-reference',
     };
     var validate = ajv.compile(schema);
-    
+
     // https://tools.ietf.org/html/rfc3986#section-4.2
-    assert.ok(!validate("this:that"));
+    assert.ok(!validate('this:that'));
   });
 
-  it("draft07 should not include draft2019 formats", function() {
-    const draft07 = require('./draft07');
+  it('idn should not include the duration format', function() {
+    const draft07 = require('./idn');
     assert.ok(!draft07.duration);
   });
 
-  it("draft07 should include the correct formats", function() {
-    const draft07 = require('./draft07');
-    assert.ok(draft07["idn-hostname"]);
-    assert.ok(draft07["idn-email"]);
-    assert.ok(draft07["iri"]);
-    assert.ok(draft07["iri-reference"]);
+  it('draft07 should include the correct formats', function() {
+    const idn = require('./idn');
+    assert.ok(idn['idn-hostname']);
+    assert.ok(idn['idn-email']);
+    assert.ok(idn['iri']);
+    assert.ok(idn['iri-reference']);
   });
 
-  it("add the draft2017 types to ajv as options to Ajv instances", function () {
-    const draft07 = require('./draft07');
-    const ajv = new Ajv({ formats : draft07});
+  it('add the idn types to ajv as options to Ajv instances', function() {
+    const formats = require('./idn');
+    const ajv = new Ajv({ formats });
     assert.ok(!ajv._formats.duration);
     assert.ok(ajv._formats.iri);
-    assert.ok(ajv._formats["idn-email"]);
-    assert.ok(ajv._formats["idn-hostname"]);
-    assert.ok(ajv._formats["iri-reference"]);
+    assert.ok(ajv._formats['idn-email']);
+    assert.ok(ajv._formats['idn-hostname']);
+    assert.ok(ajv._formats['iri-reference']);
   });
 });
-
-

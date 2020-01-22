@@ -1,12 +1,5 @@
-const formatters = [];
-
-formatters.push(require('./iri'));
-formatters.push(require('./duration'));
-formatters.push(require('./idn-email'));
-formatters.push(require('./idn-hostname'))
-formatters.push(require('./iri-reference'))
-
-const formats = {};
-formatters.forEach(value => formats[value.name] = value.validate)
-
-module.exports = formats;
+module.exports.iri = require('./iri');
+module.exports.duration = require('./duration');
+module.exports['idn-email'] = require('./idn-email');
+module.exports['idn-hostname'] = require('./idn-hostname');
+module.exports['iri-reference'] = require('./iri-reference');

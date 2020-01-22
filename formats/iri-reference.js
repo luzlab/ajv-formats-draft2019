@@ -1,16 +1,15 @@
-const { parse } = require("uri-js");
-const schemes = require("schemes");
+const { parse } = require('uri-js');
+const schemes = require('schemes');
 
-module.exports.name = "iri-reference";
-module.exports.validate = value => {
+module.exports = value => {
   const iri = parse(value);
   // All valid IRIs are valid IRI-references
-  if (iri.scheme === "mailto" && iri.to.every(validate)) {
+  if (iri.scheme === 'mailto' && iri.to.every(validate)) {
     return true;
   }
 
   if (
-    iri.reference === "absolute" &&
+    iri.reference === 'absolute' &&
     iri.path !== undefined &&
     schemes.allByName[iri.scheme]
   ) {
@@ -27,8 +26,8 @@ module.exports.validate = value => {
   // Check there's a path and for a proper type of reference
   return (
     iri.path !== undefined &&
-    (iri.reference === "relative" ||
-      iri.reference === "same-document" ||
-      iri.reference === "uri")
+    (iri.reference === 'relative' ||
+      iri.reference === 'same-document' ||
+      iri.reference === 'uri')
   );
 };
