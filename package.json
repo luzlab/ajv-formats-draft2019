@@ -5,7 +5,8 @@
   "main": "index.js",
   "scripts": {
     "start": "node index.js",
-    "test": "mocha index.test.js"
+    "test": "mocha index.test.js",
+    "format": "prettier --write '**/*.js'"
   },
   "author": "Carlo Quinonez <carlo@machina.bio>",
   "license": "MIT",
@@ -22,6 +23,7 @@
   },
   "devDependencies": {
     "ajv": "^6.10.2",
-    "mocha": "^7.0.0"
+    "mocha": "^7.0.0",
+    "prettier": "^1.19.1"
   }
 }
