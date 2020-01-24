@@ -1,11 +1,4 @@
-const draft2019formats = require('./formats');
-
-const idnFormat = {};
-
-const idnFormatKeywords = ['idn-email', 'iri', 'iri-reference', 'idn-hostname'];
-
-idnFormatKeywords.forEach(keyword => {
-  idnFormat[keyword] = draft2019formats[keyword];
-});
-
-module.exports = idnFormat;
+module.exports["idn-email"] = require('./formats/idn-email');
+module.exports["iri"] = require('./formats/iri');
+module.exports["iri-reference"] = require('./formats/iri-reference');
+module.exports["idn-hostname"] = require('./formats/idn-hostname');
