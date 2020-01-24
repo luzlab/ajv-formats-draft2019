@@ -1,6 +1,6 @@
 {
   "name": "ajv-formats",
-  "version": "1.3.2",
+  "version": "1.4.0",
   "description": "Plugin for AJV that adds support for some of draft2019 formats.",
   "main": "index.js",
   "scripts": {
