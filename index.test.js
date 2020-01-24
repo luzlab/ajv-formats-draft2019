@@ -274,4 +274,14 @@ describe('load types', function() {
     assert.ok(!ajv._formats['idn-hostname']);
     assert.ok(!ajv._formats['iri-reference']);
   });
+
+  it('it should be possible to specify formats to install', function() {
+    const ajv = new Ajv();
+    apply(ajv, { formats: ['idn-email', 'iri'] });
+    assert.ok(!ajv._formats.duration);
+    assert.ok(ajv._formats.iri);
+    assert.ok(ajv._formats['idn-email']);
+    assert.ok(!ajv._formats['idn-hostname']);
+    assert.ok(!ajv._formats['iri-reference']);
+  });
 });

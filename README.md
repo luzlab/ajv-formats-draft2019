@@ -30,13 +30,25 @@ The default export is an `apply` function that patches an existing instance of
 const Ajv = require('ajv');
 const apply = require('ajv-formats');
 const ajv = new Ajv();
-apply(ajv);
+apply(ajv); // returns ajv instance, allowing chaining
 
 let schema = {
   type: 'string',
   format: 'idn-email',
 };
 ajv.validate(schema, 'квіточка@пошта.укр'); // returns true
+```
+
+The `apply` function also accepts a second optional parameter to specify which
+formats to add to the `ajv` instance.
+
+```js
+const Ajv = require('ajv');
+const apply = require('ajv-formats');
+const ajv = new Ajv();
+
+// Install only the idn-email and iri formats
+apply(ajv, { formats: ['idn-email', 'iri'] });
 ```
 
 The module also provides an alternate entrypoint `ajv-formats/formats` that
@@ -56,7 +68,8 @@ ajv.validate(schema, 'квіточка@пошта.укр'); // returns true
 
 Using the `ajv-formats/formats` entry point also allows cherry picking formats.
 Note the approach below only works for formats that don't contain a hypen `-` in
-the name.
+the name. This approach may yield smaller packed bundles since it allows
+tree-shaking to remove unwanted validators and related dependencies.
 
 ```js
 const Ajv = require('ajv');
@@ -91,7 +104,7 @@ All valid IRIs are valid. Fragments must have a valid path and of type
 
 Validating a IRI references is challenging since the syntax is so permissive.
 Basically, any URL-safe string is a valid IRI syntactically. I struggled to find
-[negative test cases](https://github.com/luzlab/ajv-formats/blob/master/index.test.js#L232)
+[negative test cases](https://github.com/luzlab/ajv-formats/blob/master/index.test.js#L240)
 when writing the unit tests for IRI-references. Consider:
 
 - `google.com` is NOT a valid IRI because it does not include a scheme.
