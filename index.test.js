@@ -156,10 +156,24 @@ describe('load types', function() {
     const validate = ajv.compile(schema);
 
     assert.ok(validate('google.com'));
+    assert.ok(validate('123.example.com.'));
 
     // example from https://en.wikipedia.org/wiki/Internationalized_domain_name#Example_of_IDNA_encoding
     assert.ok(validate('ジェーピーニック.jp'));
     assert.ok(validate('ουτοπία.δπθ.gr'));
+
+    // https://tools.ietf.org/html/rfc5890#section-2.3.2.3
+    // -- An "internationalized domain name" (IDN) is a domain name that contains
+    //    at least ONE A-label or U-label
+    assert.ok(validate('localhost'));
+    
+    // from AJV test suite
+    // valid hostname - maximum length hostname (255 octets) with trailing dot
+    assert.ok(validate('abcdefghijklmnopqrstuvwxyz.abcdefghijklmnopqrstuvwxyz.abcdefghijklmnopqrstuvwxyz.abcdefghijklmnopqrstuvwxyz.abcdefghijklmnopqrstuvwxyz.abcdefghijklmnopqrstuvwxyz.abcdefghijklmnopqrstuvwxyz.abcdefghijklmnopqrstuvwxyz.abcdefghijklmnopqrstuvwxy.example.com.'));
+    // valid hostname - maximum length hostname (255 octets)
+    assert.ok(validate("abcdefghijklmnopqrstuvwxyz.abcdefghijklmnopqrstuvwxyz.abcdefghijklmnopqrstuvwxyz.abcdefghijklmnopqrstuvwxyz.abcdefghijklmnopqrstuvwxyz.abcdefghijklmnopqrstuvwxyz.abcdefghijklmnopqrstuvwxyz.abcdefghijklmnopqrstuvwxyz.abcdefghijklmnopqrstuvwxy.example.com"));
+    // valid hostname - maximum length label (63 chars)
+    assert.ok(validate('abcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijk.example.com'));
 
     // example from https://unicode.org/faq/idn.html#11
     assert.ok(validate('öbb.at'));
@@ -176,9 +190,15 @@ describe('load types', function() {
     var validate = ajv.compile(schema);
 
     // bad tld
-    assert.ok(!validate('example.unknown'));
-    assert.ok(!validate('localhost'));
 
+    // from ajv test suite
+    // invalid hostname - label too long (64 chars)
+    assert.ok(!validate('abcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijkl.example.com'));
+    // invalid hostname - hostname too long (256 octets)
+    assert.ok(!validate('abcdefghijklmnopqrstuvwxyz.abcdefghijklmnopqrstuvwxyz.abcdefghijklmnopqrstuvwxyz.abcdefghijklmnopqrstuvwxyz.abcdefghijklmnopqrstuvwxyz.abcdefghijklmnopqrstuvwxyz.abcdefghijklmnopqrstuvwxyz.abcdefghijklmnopqrstuvwxyz.abcdefghijklmnopqrstuvwxyz.example.com'));
+    // invalid hostname - hostname too long (256 octets)
+    assert.ok(!validate('abcdefghijklmnopqrstuvwxyz.abcdefghijklmnopqrstuvwxyz.abcdefghijklmnopqrstuvwxyz.abcdefghijklmnopqrstuvwxyz.abcdefghijklmnopqrstuvwxyz.abcdefghijklmnopqrstuvwxyz.abcdefghijklmnopqrstuvwxyz.abcdefghijklmnopqrstuvwxyz.abcdefghijklmnopqrstuvwxyz.example.com.'));
+    
     // a URL, not a hostname
     assert.ok(!validate('http://google.com'));
   });

@@ -6,15 +6,6 @@ formats added in draft2019.
 Currently, `iri`, `iri-reference`, `idn-email`, `idn-hostname`, and `duration`
 formats are supported. `duration` was added in draft 2019.
 
-An open question is how thoroughly to validate things like hostnames and IRIs
-where the syntax and semantics diverge. Writing a regex for hostnames checks the
-syntax (ie. contains only certain characters, there are multiple segments
-separated by `.` and the lengths of all segments and the total length). That
-won't catch obviously fake domains like `unknown.unknown`. This library goes a
-step further than just checking the syntax and also attempts to check the
-semantics as well. For example, when validating `idn-hostname`, this library
-will also check for a valid TLD.
-
 ## Installation
 
 ```sh
@@ -120,7 +111,6 @@ of the email.
 ### idn-hostname
 
 The hostname is converted to ascii with punycode and checked for a valid tld.
-Note that `localhost` is technically not a valid hostname.
 
 ### duration
 
