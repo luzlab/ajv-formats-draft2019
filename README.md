@@ -1,10 +1,16 @@
-# ajv-formats
+# ajv-formats-draft2119
 
-Plugin for AJV that adds support for additional international formats and
-formats added in draft2019.
+An AJV plugin adding support for draft2019 formats missing from AJV.
 
 Currently, `iri`, `iri-reference`, `idn-email`, `idn-hostname`, and `duration`
-formats are supported. `duration` was added in draft 2019.
+formats are supported. `duration` was added in draft 2019. The `uuid` format was
+added in draft2019, but was already supported by AJV.
+
+## Using international formats with pre-draft2019 JSON schemas
+
+The `idn-email` and `idn-hostname` formats are implemented per RFC 1123, however
+earlier JSON schemas specify RFC 1034. This is probably just fine, but you have
+been warned...
 
 ## Installation
 
@@ -19,7 +25,7 @@ The default export is an `apply` function that patches an existing instance of
 
 ```js
 const Ajv = require('ajv');
-const apply = require('ajv-formats');
+const apply = require('ajv-formats-draft2019');
 const ajv = new Ajv();
 apply(ajv); // returns ajv instance, allowing chaining
 
@@ -35,19 +41,19 @@ formats to add to the `ajv` instance.
 
 ```js
 const Ajv = require('ajv');
-const apply = require('ajv-formats');
+const apply = require('ajv-formats-draft2019');
 const ajv = new Ajv();
 
 // Install only the idn-email and iri formats
 apply(ajv, { formats: ['idn-email', 'iri'] });
 ```
 
-The module also provides an alternate entrypoint `ajv-formats/formats` that
+The module also provides an alternate entrypoint `ajv-formats-draft2019/formats` that
 works with the `ajv` constructor to add the formats to new instances.
 
 ```js
 const Ajv = require('ajv');
-const formats = require('ajv-formats/formats');
+const formats = require('ajv-formats-draft2019/formats');
 const ajv = new Ajv({ formats });
 
 let schema = {
@@ -57,14 +63,14 @@ let schema = {
 ajv.validate(schema, 'квіточка@пошта.укр'); // returns true
 ```
 
-Using the `ajv-formats/formats` entry point also allows cherry picking formats.
+Using the `ajv-formats-draft2019/formats` entry point also allows cherry picking formats.
 Note the approach below only works for formats that don't contain a hypen `-` in
 the name. This approach may yield smaller packed bundles since it allows
 tree-shaking to remove unwanted validators and related dependencies.
 
 ```js
 const Ajv = require('ajv');
-const { duration, iri } = require('ajv-formats/formats');
+const { duration, iri } = require('ajv-formats-draft2019/formats');
 const ajv = new Ajv({ formats: { duration, iri } });
 ```
 
@@ -75,7 +81,7 @@ The library also provides an `idn` export to load only the international formats
 
 ```js
 const Ajv = require('ajv');
-const formats = require('ajv-formats/idn');
+const formats = require('ajv-formats-draft2019/idn');
 const ajv = new Ajv({ formats });
 ```
 
