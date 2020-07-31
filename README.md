@@ -1,4 +1,4 @@
-# ajv-formats-draft2119
+# ajv-formats-draft2019
 
 An AJV plugin adding support for draft2019 formats missing from AJV.
 
