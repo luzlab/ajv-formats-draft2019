@@ -15,7 +15,7 @@ been warned...
 ## Installation
 
 ```sh
-npm install ajv-formats
+npm install --save ajv-formats-draft2019
 ```
 
 ## Usage
