@@ -1,6 +1,16 @@
 const { parse } = require('uri-js');
-const { validate } = require('isemail');
+const { addressParser } = require('smtp-address-parser');
 const schemes = require('schemes');
+
+function validate (address) {
+  try {
+    addressParser(address);
+    return true;
+  }
+  catch {
+    return false;
+  }
+}
 
 module.exports = value => {
   const iri = parse(value);

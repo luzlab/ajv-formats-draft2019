@@ -99,6 +99,7 @@ describe('load types', function() {
     assert.ok(validate('квіточка@пошта.укр'));
     assert.ok(validate('Dörte@Sörensen.example.com'));
     assert.ok(validate('John.Doe@example.com'));
+    assert.ok(validate('"John Doe"@example.com'));
   });
 
   it('reject invalid idn-emails', function() {

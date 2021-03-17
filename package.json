@@ -12,9 +12,9 @@
   "license": "MIT",
   "repository": "https://github.com/luzlab/ajv-formats-draft2019.git",
   "dependencies": {
-    "isemail": "^3.2.0",
     "punycode": "^2.1.1",
     "schemes": "^1.1.1",
+    "smtp-address-parser": "^1.0.2",
     "uri-js": "^4.2.2"
   },
   "peerDependencies": {
