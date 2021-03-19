@@ -6,7 +6,7 @@ Currently, `iri`, `iri-reference`, `idn-email`, `idn-hostname`, and `duration`
 formats are supported. `duration` was added in draft 2019. The `uuid` format was
 added in draft2019, but was already supported by AJV.
 
-![Tests](https://github.com/github/luzlab/ajv-formats-draft2019/workflows/test.yml/badge.svg?branch=master)
+[![Tests](https://github.com/luzlab/ajv-formats-draft2019/actions/workflows/test.yaml/badge.svg)](https://github.com/luzlab/ajv-formats-draft2019/actions/workflows/test.yaml)
 
 ## Using international formats with pre-draft2019 JSON schemas
 
