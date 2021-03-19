@@ -5,7 +5,7 @@ module.exports = value => {
     parse(value);
     return true;
   }
-  catch {
+  catch (err) {
     return false;
   }
 };

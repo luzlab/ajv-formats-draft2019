@@ -7,7 +7,7 @@ function validate (address) {
     addressParser(address);
     return true;
   }
-  catch {
+  catch (err) {
     return false;
   }
 }
