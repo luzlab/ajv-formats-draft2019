@@ -113,8 +113,7 @@ when writing the unit tests for IRI-references. Consider:
 
 ### idn-email
 
-[`isemail`](https://www.npmjs.com/package/isemail) is used to check the validity
-of the email.
+[`smtp-address-parser`](https://www.npmjs.com/package/smtp-address-parser) is used to check the validity of the email.
 
 ### idn-hostname
 
