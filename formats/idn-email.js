@@ -1,11 +1,10 @@
 const { parse } = require('smtp-address-parser');
 
-module.exports = value => {
+module.exports = (value) => {
   try {
     parse(value);
     return true;
-  }
-  catch (err) {
+  } catch (err) {
     return false;
   }
 };

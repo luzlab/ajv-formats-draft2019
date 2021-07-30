@@ -4,7 +4,7 @@ An AJV plugin adding support for draft2019 formats missing from AJV.
 
 Currently, `iri`, `iri-reference`, `idn-email`, `idn-hostname`, and `duration`
 formats are supported. `duration` was added in draft 2019. The `uuid` format was
-added in draft2019, but was already supported by AJV.
+added in draft2019, but is already supported by the `ajv-formats` package.
 
 [![Node.js CI](https://github.com/luzlab/ajv-formats-draft2019/actions/workflows/node.js.yml/badge.svg)](https://github.com/luzlab/ajv-formats-draft2019/actions/workflows/node.js.yml)
 
@@ -50,8 +50,8 @@ const ajv = new Ajv();
 apply(ajv, { formats: ['idn-email', 'iri'] });
 ```
 
-The module also provides an alternate entrypoint `ajv-formats-draft2019/formats` that
-works with the `ajv` constructor to add the formats to new instances.
+The module also provides an alternate entrypoint `ajv-formats-draft2019/formats`
+that works with the `ajv` constructor to add the formats to new instances.
 
 ```js
 const Ajv = require('ajv');
@@ -65,10 +65,10 @@ let schema = {
 ajv.validate(schema, 'квіточка@пошта.укр'); // returns true
 ```
 
-Using the `ajv-formats-draft2019/formats` entry point also allows cherry picking formats.
-Note the approach below only works for formats that don't contain a hypen `-` in
-the name. This approach may yield smaller packed bundles since it allows
-tree-shaking to remove unwanted validators and related dependencies.
+Using the `ajv-formats-draft2019/formats` entry point also allows cherry picking
+formats. Note the approach below only works for formats that don't contain a
+hypen `-` in the name. This approach may yield smaller packed bundles since it
+allows tree-shaking to remove unwanted validators and related dependencies.
 
 ```js
 const Ajv = require('ajv');
@@ -113,7 +113,8 @@ when writing the unit tests for IRI-references. Consider:
 
 ### idn-email
 
-[`smtp-address-parser`](https://www.npmjs.com/package/smtp-address-parser) is used to check the validity of the email.
+[`smtp-address-parser`](https://www.npmjs.com/package/smtp-address-parser) is
+used to check the validity of the email.
 
 ### idn-hostname
 
@@ -122,3 +123,19 @@ The hostname is converted to ascii with punycode and checked for a valid tld.
 ### duration
 
 The string is checked against a regex.
+
+## Releases
+
+### `v1.5.1`
+
+- Fix tests to work with AJV v7+ and how `ajv` is exported, rather than changes
+  to this library.
+
+### `v1.5.0`
+
+- Upgrade dependencies
+
+### `v1.4.4`
+
+- The last release that's compatible with Node 8.
+- Fixed a bug when validated `mailto:` IRIs.
