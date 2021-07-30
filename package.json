@@ -13,16 +13,16 @@
   "repository": "https://github.com/luzlab/ajv-formats-draft2019.git",
   "dependencies": {
     "punycode": "^2.1.1",
-    "schemes": "^1.1.1",
+    "schemes": "^1.3.0",
     "smtp-address-parser": "^1.0.3",
-    "uri-js": "^4.2.2"
+    "uri-js": "^4.4.1"
   },
   "peerDependencies": {
     "ajv": "*"
   },
   "devDependencies": {
     "ajv": "^6.10.2",
-    "mocha": "^7.0.0",
-    "prettier": "^1.19.1"
+    "mocha": "^9.0.3",
+    "prettier": "^2.3.2"
   }
 }
