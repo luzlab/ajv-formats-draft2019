@@ -11,8 +11,8 @@ module.exports = (ajv, options = {}) => {
   }
 
   allFormats
-    .filter(format => formatsToInstall.includes(format))
-    .forEach(key => {
+    .filter((format) => formatsToInstall.includes(format))
+    .forEach((key) => {
       ajv.addFormat(key, formats[key]);
     });
 
