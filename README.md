@@ -4,7 +4,7 @@ An AJV plugin adding support for draft2019 formats missing from AJV.
 
 Currently, `iri`, `iri-reference`, `idn-email`, `idn-hostname`, and `duration`
 formats are supported. `duration` was added in draft 2019. The `uuid` format was
-added in draft2019, but was already supported by AJV.
+added in draft2019, but is already supported by the `ajv-formats` package.
 
 [![Node.js CI](https://github.com/luzlab/ajv-formats-draft2019/actions/workflows/node.js.yml/badge.svg)](https://github.com/luzlab/ajv-formats-draft2019/actions/workflows/node.js.yml)
 
@@ -126,11 +126,16 @@ The string is checked against a regex.
 
 ## Releases
 
-### `v1.4.4`
+### `v1.5.1`
 
-- The last release that's compatible with Node 8.
-- Fixed a bug when validated `mailto:` IRIs.
+- Fix tests to work with AJV v7+ and how `ajv` is exported, rather than changes
+  to this library.
 
 ### `v1.5.0`
 
 - Upgrade dependencies
+
+### `v1.4.4`
+
+- The last release that's compatible with Node 8.
+- Fixed a bug when validated `mailto:` IRIs.

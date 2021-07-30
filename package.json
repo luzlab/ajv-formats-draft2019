@@ -21,7 +21,7 @@
     "ajv": "*"
   },
   "devDependencies": {
-    "ajv": "^6.10.2",
+    "ajv": "^8",
     "mocha": "^9.0.3",
     "prettier": "^2.3.2"
   }
