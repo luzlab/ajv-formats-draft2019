@@ -50,8 +50,8 @@ const ajv = new Ajv();
 apply(ajv, { formats: ['idn-email', 'iri'] });
 ```
 
-The module also provides an alternate entrypoint `ajv-formats-draft2019/formats` that
-works with the `ajv` constructor to add the formats to new instances.
+The module also provides an alternate entrypoint `ajv-formats-draft2019/formats`
+that works with the `ajv` constructor to add the formats to new instances.
 
 ```js
 const Ajv = require('ajv');
@@ -65,10 +65,10 @@ let schema = {
 ajv.validate(schema, 'квіточка@пошта.укр'); // returns true
 ```
 
-Using the `ajv-formats-draft2019/formats` entry point also allows cherry picking formats.
-Note the approach below only works for formats that don't contain a hypen `-` in
-the name. This approach may yield smaller packed bundles since it allows
-tree-shaking to remove unwanted validators and related dependencies.
+Using the `ajv-formats-draft2019/formats` entry point also allows cherry picking
+formats. Note the approach below only works for formats that don't contain a
+hypen `-` in the name. This approach may yield smaller packed bundles since it
+allows tree-shaking to remove unwanted validators and related dependencies.
 
 ```js
 const Ajv = require('ajv');
@@ -113,7 +113,8 @@ when writing the unit tests for IRI-references. Consider:
 
 ### idn-email
 
-[`smtp-address-parser`](https://www.npmjs.com/package/smtp-address-parser) is used to check the validity of the email.
+[`smtp-address-parser`](https://www.npmjs.com/package/smtp-address-parser) is
+used to check the validity of the email.
 
 ### idn-hostname
 
@@ -122,3 +123,14 @@ The hostname is converted to ascii with punycode and checked for a valid tld.
 ### duration
 
 The string is checked against a regex.
+
+## Releases
+
+### `v1.4.4`
+
+- The last release that's compatible with Node 8.
+- Fixed a bug when validated `mailto:` IRIs.
+
+### `v1.5.0`
+
+- Upgrade dependencies
