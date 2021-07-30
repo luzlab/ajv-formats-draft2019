@@ -245,6 +245,9 @@ describe('load types', function() {
     assert.ok(validate('./this:that'));
     assert.ok(validate('./path')); // relative-path reference
     assert.ok(validate('/path')); // absolute-path reference
+        
+    // https://github.com/luzlab/ajv-formats-draft2019/issues/9
+    assert.ok(!validate('mailto:valid@email.format'));
   });
 
   it('reject invalid IRI-reference', function() {
@@ -259,6 +262,9 @@ describe('load types', function() {
 
     // https://tools.ietf.org/html/rfc3986#section-4.2
     assert.ok(!validate('this:that'));
+    
+    // https://github.com/luzlab/ajv-formats-draft2019/issues/9
+    assert.ok(!validate('mailto:invalid.format'));
   });
 
   it('idn should not include the duration format', function() {
