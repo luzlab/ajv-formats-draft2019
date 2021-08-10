@@ -41,6 +41,10 @@ describe('load types', function () {
     assert.ok(validate('tel:+1-816-555-1212'));
     assert.ok(validate('telnet://192.0.2.16:80/'));
     assert.ok(validate('urn:oasis:names:specification:docbook:dtd:xml:4.1.2'));
+
+    // https://github.com/luzlab/ajv-formats-draft2019/issues/11
+    assert.ok(validate('modbus+tcp://1.2.3.4/path'));
+    assert.ok(validate('mqtt://1.2.3.4/path'));
   });
 
   it('reject invalid IRIs', function () {
