@@ -126,11 +126,11 @@ The string is checked against a regex.
 
 ## Releases
 
-### `v1.5.2`
+### `v1.6.1`
 
 - Updated `schemes` dependency, adding support for `modbus+tcp` and `mqtt` in URIs.
 
-### `v1.5.1`
+### `v1.6.0`
 
 - Fix tests to work with AJV v7+ and how `ajv` is exported, rather than changes
   to this library.
