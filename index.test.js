@@ -1,29 +1,29 @@
 const assert = require('assert');
 const apply = require('./index.js');
-const Ajv = require('ajv');
+const Ajv = require('ajv').default;
 
-describe('load types', function() {
-  it('add the types to ajv with the apply function', function() {
+describe('load types', function () {
+  it('add the types to ajv with the apply function', function () {
     const ajv = new Ajv();
     apply(ajv);
-    assert.ok(ajv._formats.duration);
-    assert.ok(ajv._formats.iri);
-    assert.ok(ajv._formats['idn-email']);
-    assert.ok(ajv._formats['idn-hostname']);
-    assert.ok(ajv._formats['iri-reference']);
+    assert.ok(ajv.formats.duration);
+    assert.ok(ajv.formats.iri);
+    assert.ok(ajv.formats['idn-email']);
+    assert.ok(ajv.formats['idn-hostname']);
+    assert.ok(ajv.formats['iri-reference']);
   });
 
-  it('add the types to ajv as options to Ajv instances', function() {
+  it('add the types to ajv as options to Ajv instances', function () {
     const formats = require('./formats');
     const ajv = new Ajv({ formats });
-    assert.ok(ajv._formats.duration);
-    assert.ok(ajv._formats.iri);
-    assert.ok(ajv._formats['idn-email']);
-    assert.ok(ajv._formats['idn-hostname']);
-    assert.ok(ajv._formats['iri-reference']);
+    assert.ok(ajv.formats.duration);
+    assert.ok(ajv.formats.iri);
+    assert.ok(ajv.formats['idn-email']);
+    assert.ok(ajv.formats['idn-hostname']);
+    assert.ok(ajv.formats['iri-reference']);
   });
 
-  it('accept valid IRIs', function() {
+  it('accept valid IRIs', function () {
     const ajv = new Ajv();
     apply(ajv);
     const schema = {
@@ -41,9 +41,13 @@ describe('load types', function() {
     assert.ok(validate('tel:+1-816-555-1212'));
     assert.ok(validate('telnet://192.0.2.16:80/'));
     assert.ok(validate('urn:oasis:names:specification:docbook:dtd:xml:4.1.2'));
+
+    // https://github.com/luzlab/ajv-formats-draft2019/issues/11
+    assert.ok(validate('modbus+tcp://1.2.3.4/path'));
+    assert.ok(validate('mqtt://1.2.3.4/path'));
   });
 
-  it('reject invalid IRIs', function() {
+  it('reject invalid IRIs', function () {
     const ajv = new Ajv();
     apply(ajv);
 
@@ -61,7 +65,7 @@ describe('load types', function() {
     assert.ok(!validate('afile.svg#anelement'));
   });
 
-  it('accept a valid duration', function() {
+  it('accept a valid duration', function () {
     const ajv = new Ajv();
     apply(ajv);
 
@@ -73,7 +77,7 @@ describe('load types', function() {
     assert.ok(validate('P1Y2M4DT20H44M12.67S'));
   });
 
-  it('reject an invalid duration', function() {
+  it('reject an invalid duration', function () {
     const ajv = new Ajv();
     apply(ajv);
 
@@ -85,7 +89,7 @@ describe('load types', function() {
     assert.ok(!validate('10 seconds'));
   });
 
-  it('accept valid idn-emails', function() {
+  it('accept valid idn-emails', function () {
     const ajv = new Ajv();
     apply(ajv);
 
@@ -102,7 +106,7 @@ describe('load types', function() {
     assert.ok(validate('"John Doe"@example.com'));
   });
 
-  it('reject invalid idn-emails', function() {
+  it('reject invalid idn-emails', function () {
     const ajv = new Ajv();
     apply(ajv);
 
@@ -115,7 +119,8 @@ describe('load types', function() {
     assert.ok(!validate('valid@somewhere.com?asdf'));
   });
 
-  it('accept valid uuids', function() {
+  // skipped because of https://github.com/luzlab/ajv-formats-draft2019/issues/14
+  it.skip('accept valid uuids', function () {
     const ajv = new Ajv();
     apply(ajv);
 
@@ -133,7 +138,8 @@ describe('load types', function() {
     assert.ok(validate('e1a4973e-395b-11ea-a137-2e728ce88125'));
   });
 
-  it('reject invalid uuids', function() {
+  // skipped because of https://github.com/luzlab/ajv-formats-draft2019/issues/14
+  it.skip('reject invalid uuids', function () {
     const ajv = new Ajv();
     apply(ajv);
 
@@ -146,7 +152,7 @@ describe('load types', function() {
     assert.ok(!validate('55e9b1aa-cff4-43fe-8c66-bdg190720360'));
   });
 
-  it('accept valid international domains', function() {
+  it('accept valid international domains', function () {
     const ajv = new Ajv();
     apply(ajv);
 
@@ -167,20 +173,32 @@ describe('load types', function() {
     // -- An "internationalized domain name" (IDN) is a domain name that contains
     //    at least ONE A-label or U-label
     assert.ok(validate('localhost'));
-    
+
     // from AJV test suite
     // valid hostname - maximum length hostname (255 octets) with trailing dot
-    assert.ok(validate('abcdefghijklmnopqrstuvwxyz.abcdefghijklmnopqrstuvwxyz.abcdefghijklmnopqrstuvwxyz.abcdefghijklmnopqrstuvwxyz.abcdefghijklmnopqrstuvwxyz.abcdefghijklmnopqrstuvwxyz.abcdefghijklmnopqrstuvwxyz.abcdefghijklmnopqrstuvwxyz.abcdefghijklmnopqrstuvwxy.example.com.'));
+    assert.ok(
+      validate(
+        'abcdefghijklmnopqrstuvwxyz.abcdefghijklmnopqrstuvwxyz.abcdefghijklmnopqrstuvwxyz.abcdefghijklmnopqrstuvwxyz.abcdefghijklmnopqrstuvwxyz.abcdefghijklmnopqrstuvwxyz.abcdefghijklmnopqrstuvwxyz.abcdefghijklmnopqrstuvwxyz.abcdefghijklmnopqrstuvwxy.example.com.',
+      ),
+    );
     // valid hostname - maximum length hostname (255 octets)
-    assert.ok(validate("abcdefghijklmnopqrstuvwxyz.abcdefghijklmnopqrstuvwxyz.abcdefghijklmnopqrstuvwxyz.abcdefghijklmnopqrstuvwxyz.abcdefghijklmnopqrstuvwxyz.abcdefghijklmnopqrstuvwxyz.abcdefghijklmnopqrstuvwxyz.abcdefghijklmnopqrstuvwxyz.abcdefghijklmnopqrstuvwxy.example.com"));
+    assert.ok(
+      validate(
+        'abcdefghijklmnopqrstuvwxyz.abcdefghijklmnopqrstuvwxyz.abcdefghijklmnopqrstuvwxyz.abcdefghijklmnopqrstuvwxyz.abcdefghijklmnopqrstuvwxyz.abcdefghijklmnopqrstuvwxyz.abcdefghijklmnopqrstuvwxyz.abcdefghijklmnopqrstuvwxyz.abcdefghijklmnopqrstuvwxy.example.com',
+      ),
+    );
     // valid hostname - maximum length label (63 chars)
-    assert.ok(validate('abcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijk.example.com'));
+    assert.ok(
+      validate(
+        'abcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijk.example.com',
+      ),
+    );
 
     // example from https://unicode.org/faq/idn.html#11
     assert.ok(validate('öbb.at'));
   });
 
-  it('reject invalid international domains', function() {
+  it('reject invalid international domains', function () {
     const ajv = new Ajv();
     apply(ajv);
 
@@ -194,17 +212,29 @@ describe('load types', function() {
 
     // from ajv test suite
     // invalid hostname - label too long (64 chars)
-    assert.ok(!validate('abcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijkl.example.com'));
+    assert.ok(
+      !validate(
+        'abcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijkl.example.com',
+      ),
+    );
     // invalid hostname - hostname too long (256 octets)
-    assert.ok(!validate('abcdefghijklmnopqrstuvwxyz.abcdefghijklmnopqrstuvwxyz.abcdefghijklmnopqrstuvwxyz.abcdefghijklmnopqrstuvwxyz.abcdefghijklmnopqrstuvwxyz.abcdefghijklmnopqrstuvwxyz.abcdefghijklmnopqrstuvwxyz.abcdefghijklmnopqrstuvwxyz.abcdefghijklmnopqrstuvwxyz.example.com'));
+    assert.ok(
+      !validate(
+        'abcdefghijklmnopqrstuvwxyz.abcdefghijklmnopqrstuvwxyz.abcdefghijklmnopqrstuvwxyz.abcdefghijklmnopqrstuvwxyz.abcdefghijklmnopqrstuvwxyz.abcdefghijklmnopqrstuvwxyz.abcdefghijklmnopqrstuvwxyz.abcdefghijklmnopqrstuvwxyz.abcdefghijklmnopqrstuvwxyz.example.com',
+      ),
+    );
     // invalid hostname - hostname too long (256 octets)
-    assert.ok(!validate('abcdefghijklmnopqrstuvwxyz.abcdefghijklmnopqrstuvwxyz.abcdefghijklmnopqrstuvwxyz.abcdefghijklmnopqrstuvwxyz.abcdefghijklmnopqrstuvwxyz.abcdefghijklmnopqrstuvwxyz.abcdefghijklmnopqrstuvwxyz.abcdefghijklmnopqrstuvwxyz.abcdefghijklmnopqrstuvwxyz.example.com.'));
-    
+    assert.ok(
+      !validate(
+        'abcdefghijklmnopqrstuvwxyz.abcdefghijklmnopqrstuvwxyz.abcdefghijklmnopqrstuvwxyz.abcdefghijklmnopqrstuvwxyz.abcdefghijklmnopqrstuvwxyz.abcdefghijklmnopqrstuvwxyz.abcdefghijklmnopqrstuvwxyz.abcdefghijklmnopqrstuvwxyz.abcdefghijklmnopqrstuvwxyz.example.com.',
+      ),
+    );
+
     // a URL, not a hostname
     assert.ok(!validate('http://google.com'));
   });
 
-  it('accept valid IRI-reference', function() {
+  it('accept valid IRI-reference', function () {
     const ajv = new Ajv();
     apply(ajv);
 
@@ -245,9 +275,12 @@ describe('load types', function() {
     assert.ok(validate('./this:that'));
     assert.ok(validate('./path')); // relative-path reference
     assert.ok(validate('/path')); // absolute-path reference
+
+    // https://github.com/luzlab/ajv-formats-draft2019/issues/9
+    assert.ok(!validate('mailto:valid@email.format'));
   });
 
-  it('reject invalid IRI-reference', function() {
+  it('reject invalid IRI-reference', function () {
     const ajv = new Ajv();
     apply(ajv);
 
@@ -259,14 +292,17 @@ describe('load types', function() {
 
     // https://tools.ietf.org/html/rfc3986#section-4.2
     assert.ok(!validate('this:that'));
+
+    // https://github.com/luzlab/ajv-formats-draft2019/issues/9
+    assert.ok(!validate('mailto:invalid.format'));
   });
 
-  it('idn should not include the duration format', function() {
+  it('idn should not include the duration format', function () {
     const draft07 = require('./idn');
     assert.ok(!draft07.duration);
   });
 
-  it('draft07 should include the correct formats', function() {
+  it('draft07 should include the correct formats', function () {
     const idn = require('./idn');
     assert.ok(idn['idn-hostname']);
     assert.ok(idn['idn-email']);
@@ -274,35 +310,35 @@ describe('load types', function() {
     assert.ok(idn['iri-reference']);
   });
 
-  it('add the idn types to ajv as options to Ajv instances', function() {
+  it('add the idn types to ajv as options to Ajv instances', function () {
     const formats = require('./idn');
     const ajv = new Ajv({ formats });
-    assert.ok(!ajv._formats.duration);
-    assert.ok(ajv._formats.iri);
-    assert.ok(ajv._formats['idn-email']);
-    assert.ok(ajv._formats['idn-hostname']);
-    assert.ok(ajv._formats['iri-reference']);
+    assert.ok(!ajv.formats.duration);
+    assert.ok(ajv.formats.iri);
+    assert.ok(ajv.formats['idn-email']);
+    assert.ok(ajv.formats['idn-hostname']);
+    assert.ok(ajv.formats['iri-reference']);
   });
 
-  it('it should be possible to cherry pick formats to install', function() {
+  it('it should be possible to cherry pick formats to install', function () {
     const { duration, iri } = require('./formats');
 
     const ajv = new Ajv({ formats: { duration, iri } });
 
-    assert.ok(ajv._formats.duration);
-    assert.ok(ajv._formats.iri);
-    assert.ok(!ajv._formats['idn-email']);
-    assert.ok(!ajv._formats['idn-hostname']);
-    assert.ok(!ajv._formats['iri-reference']);
+    assert.ok(ajv.formats.duration);
+    assert.ok(ajv.formats.iri);
+    assert.ok(!ajv.formats['idn-email']);
+    assert.ok(!ajv.formats['idn-hostname']);
+    assert.ok(!ajv.formats['iri-reference']);
   });
 
-  it('it should be possible to specify formats to install', function() {
+  it('it should be possible to specify formats to install', function () {
     const ajv = new Ajv();
     apply(ajv, { formats: ['idn-email', 'iri'] });
-    assert.ok(!ajv._formats.duration);
-    assert.ok(ajv._formats.iri);
-    assert.ok(ajv._formats['idn-email']);
-    assert.ok(!ajv._formats['idn-hostname']);
-    assert.ok(!ajv._formats['iri-reference']);
+    assert.ok(!ajv.formats.duration);
+    assert.ok(ajv.formats.iri);
+    assert.ok(ajv.formats['idn-email']);
+    assert.ok(!ajv.formats['idn-hostname']);
+    assert.ok(!ajv.formats['iri-reference']);
   });
 });
