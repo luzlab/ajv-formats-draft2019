@@ -16,7 +16,7 @@ module.exports = (value) => {
   if (iri.scheme === 'mailto' && iri.to.every(validate)) {
     return true;
   }
-  if (iri.reference === 'absolute' && schemes.allByName[iri.scheme]) {
+  if ((iri.reference === 'absolute' || iri.reference === 'uri') && schemes.allByName[iri.scheme]) {
     return true;
   }
   return false;

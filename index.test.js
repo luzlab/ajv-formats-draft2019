@@ -45,6 +45,9 @@ describe('load types', function () {
     // https://github.com/luzlab/ajv-formats-draft2019/issues/11
     assert.ok(validate('modbus+tcp://1.2.3.4/path'));
     assert.ok(validate('mqtt://1.2.3.4/path'));
+
+    // https://github.com/luzlab/ajv-formats-draft2019/issues/16
+    assert.ok(validate('http://www.w3.org/2004/02/skos/core#Concept'));
   });
 
   it('reject invalid IRIs', function () {
