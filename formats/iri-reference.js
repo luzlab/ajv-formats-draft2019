@@ -1,5 +1,5 @@
 const { parse } = require('uri-js');
-const { addressParser } = require('smtp-address-parser');
+const addressParser = require('smtp-address-parser').parse;
 const schemes = require('schemes');
 
 function validate(address) {

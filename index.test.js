@@ -280,7 +280,7 @@ describe('load types', function () {
     assert.ok(validate('/path')); // absolute-path reference
 
     // https://github.com/luzlab/ajv-formats-draft2019/issues/9
-    assert.ok(!validate('mailto:valid@email.format'));
+    assert.ok(validate('mailto:valid@email.format'));
   });
 
   it('reject invalid IRI-reference', function () {
