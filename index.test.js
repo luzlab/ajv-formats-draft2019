@@ -48,6 +48,10 @@ describe('load types', function () {
 
     // https://github.com/luzlab/ajv-formats-draft2019/issues/16
     assert.ok(validate('http://www.w3.org/2004/02/skos/core#Concept'));
+
+    // https://github.com/luzlab/ajv-formats-draft2019/issues/22
+    assert.ok(validate('git+https://github.com/Alex-D/check-disk-space.git'));
+    assert.ok(validate('git+ssh://git@github.com/estools/escodegen.git'));
   });
 
   it('reject invalid IRIs', function () {
@@ -60,8 +64,6 @@ describe('load types', function () {
     };
     var validate = ajv.compile(schema);
     assert.ok(!validate('example.com')); // missing a scheme
-    assert.ok(!validate('invalidScheme://example.com')); // an invalid scheme
-    assert.ok(!validate('this:that'));
 
     // These are IRI-References not IRI
     assert.ok(!validate('#someelement'));
@@ -292,9 +294,6 @@ describe('load types', function () {
       format: 'iri-reference',
     };
     var validate = ajv.compile(schema);
-
-    // https://tools.ietf.org/html/rfc3986#section-4.2
-    assert.ok(!validate('this:that'));
 
     // https://github.com/luzlab/ajv-formats-draft2019/issues/9
     assert.ok(!validate('mailto:invalid.format'));

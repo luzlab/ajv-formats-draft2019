@@ -1,6 +1,6 @@
 const { parse } = require('uri-js');
 const addressParser = require('smtp-address-parser').parse;
-const schemes = require('schemes');
+const { scheme} = require('./ini-abnf')
 
 function validate(address) {
   try {
@@ -21,7 +21,7 @@ module.exports = (value) => {
   if (
     iri.reference === 'absolute' &&
     iri.path !== undefined &&
-    schemes.allByName[iri.scheme]
+    scheme.test(iri.scheme)
   ) {
     return true;
   }
@@ -29,7 +29,7 @@ module.exports = (value) => {
   // Check for valid IRI-reference
 
   // If there is a scheme, it must be valid
-  if (iri.scheme && !schemes.allByName[iri.scheme]) {
+  if (iri.scheme && !scheme.test(iri.scheme)) {
     return false;
   }
 

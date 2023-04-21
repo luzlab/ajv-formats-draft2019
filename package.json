@@ -13,7 +13,6 @@
   "repository": "https://github.com/luzlab/ajv-formats-draft2019.git",
   "dependencies": {
     "punycode": "^2.1.1",
-    "schemes": "^1.4.0",
     "smtp-address-parser": "^1.0.3",
     "uri-js": "^4.4.1"
   },
